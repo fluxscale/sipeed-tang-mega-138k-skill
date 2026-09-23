@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tang Mega 138K FPGA Engineer"
+  short_description: "GW5AST design, bring-up, timing, and issue research"
+  default_prompt: "Use $sipeed-tang-mega-138k to investigate this FPGA task using the exact board, tool versions, and authoritative references."
