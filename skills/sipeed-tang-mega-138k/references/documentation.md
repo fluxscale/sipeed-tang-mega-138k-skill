@@ -37,7 +37,7 @@ Start at the [Gowin documentation database](https://www.gowinsemi.com/en/documen
 | [DS1239: GW5AST series datasheet](https://cdn.gowinsemi.com.cn/DS1239E.pdf) | Current family resource/package tables, electrical limits, speed grades; inspect actual PDF revision |
 | [DS1104: older GW5AST datasheet](https://cdn.gowinsemi.com.cn/DS1104E.pdf) | Historical projects; compare against DS1239 rather than mixing limits |
 | UG1102, GW5AST package and pinout guide | Package outline, ball/bank relationships; select PG484 or FPG676 as fitted |
-| UG986, 138-device pinout | Obtain the device-specific pinout file through the vendor database; naming differs between older/newer references |
+| [UG986, GW5AST-138 pinout](https://www.gowinsemi.com/en/document/main/database/1/?order=DESC&page=8&support_search=&type=version) | Obtain the PDF/XLSX for the exact package; do not substitute the separate GW5AS-138 pinout (UG1107) |
 | UG984, GW5AT/GW5AST schematic manual | Custom carrier/SOM design checks; not a Sipeed schematic |
 | [UG306: Arora V clock guide](https://cdn.gowinsemi.com.cn/UG306E.pdf) | PLL, global/HCLK routing, clock placement and supported modes |
 | UG304, Arora V programmable IO (GPIO) guide | IO logic, serializers, delay resources, electrical mode restrictions |

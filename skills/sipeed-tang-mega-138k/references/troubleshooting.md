@@ -33,12 +33,13 @@ From the installed skill directory (or use its absolute path):
 
 ```sh
 python3 scripts/search_issues.py --repo sipeed/TangMega-138K-example --query 'DDR3' --kind all
+python3 scripts/search_issues.py --group boards --query '"PLL not locked"' --dry-run
 python3 scripts/search_issues.py --group tools --query 'GW5AST' --limit 15
 python3 scripts/search_issues.py --group boards --query '"PLL"' --state closed --format json
 python3 scripts/search_issues.py --group boards --query 'calibration' --dry-run
 ```
 
-`boards` searches the non-Pro and Pro example repositories; `tools` searches Apicula, nextpnr, Yosys and openFPGALoader. Default is `boards`. `--kind all` includes issues and PRs; default state is all. Results are bounded per repository; output records counts and truncation. `--state closed` on PRs includes closed-unmerged PRs, so inspect merge status separately.
+`boards` searches the non-Pro and Pro example repositories; `tools` searches Apicula, nextpnr, Yosys and openFPGALoader. `networking` searches LiteEth, LiteX White Rabbit, LambdaEth and gowin-serdes. Default is `boards`. `--kind all` includes issues and PRs; default state is all. Results are bounded per repository; output records counts and truncation. `--state closed` on PRs includes closed-unmerged PRs, so inspect merge status separately.
 
 The script only queries GitHub's public search API. It reads optional `GITHUB_TOKEN` or `GH_TOKEN` from the environment, never prints the token, and performs no writes. It does not install dependencies, clone repositories, fetch comments, execute fixes or file issues. On authentication/rate-limit/network failure it reports the affected repository and exits nonzero; it does not silently interpret failure as zero results.
 

@@ -33,6 +33,7 @@ Read only the references needed for the current task; the following are independ
 | Constrain clocks/I/O, cross clock domains, close setup/hold timing | [Constraints, clocks, and CDC](references/constraints-timing.md) |
 | Bring up or validate DDR3 and memory bandwidth | [DDR3 and memory](references/ddr3.md) |
 | Bring up PCIe, DMA, SFP+, transceivers | [PCIe and SerDes](references/pcie-serdes.md) |
+| Choose, port and debug an upstream fiber application | [Applied fiber workflows](references/fiber-workflows.md) |
 | Find existing fiber, SFP Ethernet, White Rabbit and SerDes projects | [Fiber project catalog](references/fiber-projects.md) |
 | Video/cameras, Ethernet, USB/CH569, audio, SD, GPIO, ADC | [Peripheral integration](references/peripherals.md) |
 | Use the AE350 hard RISC-V subsystem and firmware | [AE350 SoC](references/ae350.md) |

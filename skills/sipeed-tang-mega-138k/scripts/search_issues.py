@@ -13,6 +13,8 @@ import urllib.request
 
 GROUPS = {
     "boards": ["sipeed/TangMega-138K-example", "sipeed/TangMega-138KPro-example"],
+    "networking": ["enjoy-digital/liteeth", "enjoy-digital/litex_wr_nic",
+                   "key2/lambdaeth", "key2/gowin-serdes"],
     "tools": ["YosysHQ/apicula", "YosysHQ/nextpnr", "YosysHQ/yosys",
               "trabucayre/openFPGALoader"],
 }
@@ -110,10 +112,14 @@ def main(argv=None):
     args = parser.parse_args(argv)
     if not args.query.strip():
         parser.error("--query must not be empty")
-    # Scope belongs to --repo/--group; keep user search terms from silently
-    # expanding it through GitHub qualifiers or boolean expressions.
-    if re.search(r"\b(?:repo|org|user):|\b(?:OR|NOT)\b", args.query, re.IGNORECASE):
-        parser.error("use --repo/--group for scope; run alternative terms as separate queries")
+    # Quoted diagnostics are literals, even when they contain NOT, OR or repo:.
+    # Preserve the original query for GitHub; inspect only unquoted syntax.
+    syntax = re.sub(r'"(?:\\.|[^"\\])*"', " ", args.query)
+    if '"' in syntax:
+        parser.error("unclosed double quote in --query")
+    if (re.search(r"\b(?:repo|org|user):", syntax, re.IGNORECASE)
+            or re.search(r"\b(?:OR|NOT)\b", syntax)):
+        parser.error("use --repo/--group for scope; quote literal OR/NOT diagnostics or run separate queries")
     repos = list(dict.fromkeys(args.repo or GROUPS[args.group or "boards"]))
     token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
     output = {"retrieved_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),

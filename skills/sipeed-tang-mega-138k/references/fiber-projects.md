@@ -2,11 +2,13 @@
 
 Research date: 2026-09-23. The demonstrated board applications below target the **Mega 138K Pro dock**; the FPGA-level section covers reusable code and non-Sipeed references. Hardware results below are author reports; this skill's maintainers did not reproduce them. Open-source application/PHY logic can still require Gowin's implementation tools and hard transceiver primitives. Check dependency licenses separately before redistribution.
 
+For choosing and adapting these sources, read the [applied fiber workflows](fiber-workflows.md).
+
 ## LambdaEth: Ethernet applications over fiber
 
 [Repository](https://github.com/key2/lambdaeth) · [inspected README at 14bf0dd](https://github.com/key2/lambdaeth/blob/14bf0dd19914a583993d119eeee86a3abff235e6/README.md).
 
-BSD-2-Clause Amaranth Ethernet stack with a Pro 1000BASE-X example: `examples/tang_mega_138k_1000basex.py`. Authors report simultaneous negotiation on both SFP cages and ICMP/UDP/TCP echo over fiber. One lane carries the full stack; the other supplies negotiation and observation. This is gigabit Ethernet, not a 10GbE implementation. The byte-wide protocol core limits sustained throughput to roughly 400 Mb/s at 50 MHz; TCP also has explicit simplicity/feature limits. Inspect its `gowin-serdes` dependency and patched Amaranth dependencies. Cached search results showed an older RGMII-only README: use the pinned source when evaluating SFP support.
+BSD-2-Clause Amaranth Ethernet stack with a Pro 1000BASE-X example: `examples/tang_mega_138k_1000basex.py`. Authors report simultaneous negotiation on both SFP cages and ICMP/UDP/TCP echo over fiber. One lane carries the full stack; the other supplies negotiation and observation. This is gigabit Ethernet, not a 10GbE implementation. The byte-wide protocol core limits sustained throughput to roughly 400 Mb/s at 50 MHz; TCP also has explicit simplicity/feature limits. The pinned version reports that CRC-failed frames are flagged but not discarded before reaching the protocol core; assess and test that behavior before using it beyond a controlled demo. Inspect its `gowin-serdes` dependency and patched Amaranth dependencies. Cached search results showed an older RGMII-only README: use the pinned source when evaluating SFP support.
 
 ## LiteX White Rabbit: timing over optical Ethernet
 
@@ -46,7 +48,7 @@ No turnkey, production-qualified open-source fiber product was established by th
 
 ### LiteEth's GW5AST PHY
 
-[BSD-2-Clause source: `gw5_1000basex.py`](https://github.com/enjoy-digital/liteeth/blob/master/liteeth/phy/gw5_1000basex.py) provides `GW5SerDes` and `GW5_1000BASEX`. The inspected implementation explicitly restricts the device to **GW5AST-138B**, Q1 lanes 0/1, at 1.25 Gb/s; the Ethernet wrapper uses a 100 MHz Q1 REFCLK1. This is reusable FPGA-specific source, not a general validated backend for every GW5AT/GW5AST revision. A custom board must supply the matching physical resources or adapt and validate the implementation. RX validity and FIFO occupancy matter; raw interface alignment does not guarantee deterministic latency.
+[BSD-2-Clause source: `gw5_1000basex.py`](https://github.com/enjoy-digital/liteeth/blob/8641c497598b13e3016e6e2688da652d785d4b49/liteeth/phy/gw5_1000basex.py) provides `GW5SerDes` and `GW5_1000BASEX`. The inspected implementation explicitly restricts the device to **GW5AST-138B**, Q1 lanes 0/1, at 1.25 Gb/s; the Ethernet wrapper uses a 100 MHz Q1 REFCLK1. This is reusable FPGA-specific source, not a general validated backend for every GW5AT/GW5AST revision. A custom board must supply the matching physical resources or adapt and validate the implementation. RX validity and FIFO occupancy matter; raw interface alignment does not guarantee deterministic latency.
 
 ### Amaranth's multi-device configuration layer
 

@@ -94,7 +94,7 @@ Examples are starting points, not guaranteed compatible binaries. Pin commits an
 
 ## Fiber and SFP projects
 
-The [fiber project catalog](skills/sipeed-tang-mega-138k/references/fiber-projects.md) covers LambdaEth 1000BASE-X, LiteX White Rabbit on the Pro dock, Sipeed PRBS fiber/DAC tests, and its 10GbE UDP demo, with source links and validation limits.
+The [fiber project catalog](skills/sipeed-tang-mega-138k/references/fiber-projects.md) covers LambdaEth 1000BASE-X, LiteX White Rabbit on the Pro dock, Sipeed PRBS fiber/DAC tests, and its 10GbE UDP demo, with source links and validation limits. The [applied fiber workflows](skills/sipeed-tang-mega-138k/references/fiber-workflows.md) turn those findings into baseline selection, porting checks and staged diagnostics.
 
 ## Example requests
 
@@ -121,7 +121,7 @@ Use `--help` for filters and `--dry-run` to inspect queries without network acce
 
 ## Validation and publication
 
-Run the repository checks with Python 3:
+Run the repository checks with Python 3.9 or newer:
 
 ```sh
 python3 scripts/validate.py

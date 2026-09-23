@@ -48,6 +48,18 @@ class SearchTests(unittest.TestCase):
         self.assertEqual(len(data["results"]), 2)
         self.assertIn('"校准 failure"', urllib.parse.parse_qs(urllib.parse.urlsplit(data["results"][0]["api_url"]).query)["q"][0])
 
+    def test_networking_group_scopes_each_query_without_network(self):
+        with patch.object(search, "fetch", side_effect=AssertionError("network forbidden")), contextlib.redirect_stdout(io.StringIO()) as out:
+            code = search.main(["--group", "networking", "--query", "alignment", "--kind", "pr", "--dry-run", "--format", "json"])
+        results = json.loads(out.getvalue())["results"]
+        self.assertEqual(code, 0)
+        self.assertEqual({r["repository"] for r in results}, {
+            "enjoy-digital/liteeth", "enjoy-digital/litex_wr_nic",
+            "key2/lambdaeth", "key2/gowin-serdes"})
+        for result in results:
+            query = urllib.parse.parse_qs(urllib.parse.urlsplit(result["api_url"]).query)["q"][0]
+            self.assertEqual(query, f"repo:{result['repository']} alignment is:pr")
+
     def test_partial_failure_is_nonzero_and_keeps_success(self):
         ok = {"total_count": 0, "returned": 0, "truncated": False, "incomplete_results": False, "items": []}
         with patch.object(search, "fetch", side_effect=[RuntimeError("GitHub HTTP 429"), ok]), contextlib.redirect_stdout(io.StringIO()) as out:
@@ -66,6 +78,22 @@ class SearchTests(unittest.TestCase):
         with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as caught:
             search.main(["--query", "repo:another/repo", "--dry-run"])
         self.assertEqual(caught.exception.code, 2)
+
+    def test_literal_diagnostics_preserve_quotes_and_search_scope(self):
+        for query in ('"PLL not locked"', '"NOT supported OR missing"',
+                      '"repo:foo not found"', 'PLL not locked'):
+            with self.subTest(query=query), patch.object(search, "fetch", side_effect=AssertionError("network forbidden")), contextlib.redirect_stdout(io.StringIO()) as out:
+                code = search.main(["--query", query, "--dry-run", "--format", "json"])
+            self.assertEqual(code, 0)
+            result = json.loads(out.getvalue())["results"][0]
+            self.assertEqual(result["query"], f"repo:sipeed/TangMega-138K-example {query}")
+
+    def test_unquoted_scope_and_boolean_overrides_remain_rejected(self):
+        for query in ('"PLL" OR repo:another/repo', 'org:another PLL',
+                      'NOT PLL', '"unclosed'):
+            with self.subTest(query=query), contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as caught:
+                search.main(["--query", query, "--dry-run"])
+            self.assertEqual(caught.exception.code, 2)
 
     def test_titles_cannot_inject_terminal_lines(self):
         self.assertNotIn("\x1b", search.clean("bad\x1b[31m\nnext"))
